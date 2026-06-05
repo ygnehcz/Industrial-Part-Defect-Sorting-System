@@ -9,3 +9,5 @@ outputs/
 
 .vscode/
 .cursor/
+
+data/yolo_seg/

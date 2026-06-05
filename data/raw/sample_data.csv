@@ -1,0 +1,6 @@
+image_name,defect_area,true_status
+image_01.jpg,0,OK
+image_02.jpg,120,NG
+image_03.jpg,80,NG
+image_04.jpg,150,OK
+image_05.jpg,30,OK

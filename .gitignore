@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+
+.DS_Store
+Thumbs.db
+
+outputs/images/
+outputs/reports/*.csv
+outputs/reports/*.png
+
+.vscode/
+.cursor/

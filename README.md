@@ -62,3 +62,4 @@ Industrial-Part-Defect-Sorting-System
 ├─ requirements.txt
 └─ README.md
 
+

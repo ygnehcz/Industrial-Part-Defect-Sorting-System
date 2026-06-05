@@ -16,6 +16,21 @@
 8. 计算 Accuracy、Precision、Recall
 9. 保存检测明细报表、汇总评价报表和阈值实验曲线图
 
+
+## 效果展示
+
+### OK 合格样例
+
+![OK 合格样例](docs/images/ok_sample_marked.jpg)
+
+### NG 单缺陷样例
+
+![NG 单缺陷样例](docs/images/ng_sample_marked.jpg)
+
+### NG 多缺陷样例
+
+![NG 多缺陷样例](docs/images/multi_defect_marked.jpg)
+
 ## 当前项目结构
 
 ```text

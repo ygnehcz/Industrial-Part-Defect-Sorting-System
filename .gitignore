@@ -5,9 +5,7 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-outputs/images/
-outputs/reports/*.csv
-outputs/reports/*.png
+outputs/
 
 .vscode/
 .cursor/

@@ -1,5 +1,31 @@
 # 工业零件表面缺陷检测与分拣模拟系统
 
+
+## 当前最佳结果
+
+| 方法 | 模型 | F1 | Precision | Recall | TP/TN/FP/FN |
+|------|------|-----|-----------|--------|--------------|
+| OpenCV CLAHE | — | 0.688 | 82.3% | 59.1% | 65/880/14/45 |
+| **YOLOv8n-seg** | **3ep conf=0.05** | **0.833** | **90.4%** | **77.3%** | **85/885/9/25** |
+
+**推荐模型**：V2.2 YOLOv8n-seg 3epochs, confidence=0.05
+
+### 版本路线图
+
+| 阶段 | 版本 | 核心内容 |
+|------|------|----------|
+| V0 | v0.1~v0.5 | OpenCV 模拟图片基础功能 |
+| V1 | v1.0~v1.3 | 真实数据 + CLAHE + 实验可视化 |
+| V2 | v2.0~v2.4 | YOLO segmentation + 训练 + 模型选择 |
+| **V2.5** | **v2.5** | **作品集包装** |
+
+### 文档导航
+
+- [最终项目报告](docs/final_project_report.md)
+- [面试问答](docs/interview_questions.md)
+- [简历素材](docs/resume_snippets.md)
+- [简历项目总结](docs/resume_project_summary.md)
+
 ## 项目简介
 
 本项目用于学习和实现工业零件表面缺陷检测与分拣模拟流程。
@@ -61,6 +87,7 @@ Industrial-Part-Defect-Sorting-System
 ├─ main.py
 ├─ requirements.txt
 └─ README.md
+
 
 
 

@@ -9,7 +9,8 @@ def save_report(results, output_path):
         "true_status",
         "pred_status",
         "marked_image_path",
-        "binary_image_path"
+        "binary_image_path",
+        "morph_image_path"
     ]
 
     with open(output_path, "w", newline="", encoding="utf-8") as file:

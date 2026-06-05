@@ -17,3 +17,12 @@ MIN_CONTOUR_AREA = 50
 
 THRESHOLD_EXPERIMENT_CSV = "outputs/reports/threshold_experiment_report.csv"
 THRESHOLD_METRICS_FIGURE = "outputs/reports/threshold_metrics.png"
+
+MORPH_KERNEL_SIZE = 5
+USE_OPEN_OPERATION = True
+USE_CLOSE_OPERATION = True
+MORPH_OUTPUT_DIR = "outputs/morphology"
+
+CAMERA_INDEX = 0
+REALTIME_SAVE_DIR = "outputs/realtime"
+SAVE_NG_FRAME = True

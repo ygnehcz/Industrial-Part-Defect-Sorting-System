@@ -31,6 +31,15 @@
 
 ![NG 多缺陷样例](docs/images/multi_defect_marked.jpg)
 
+
+## V0.2 更新说明
+
+- 增加形态学开运算、闭运算预处理模块 (`src/morphology.py`)
+- 缺陷面积统计和轮廓检测改为基于形态学处理后图像
+- 每张图片额外保存形态学处理结果图到 `outputs/morphology/`
+- CSV 报表新增 `morph_image_path` 字段
+- 开运算用于去除小噪声点，闭运算用于填补缺陷区域断裂
+
 ## 当前项目结构
 
 ```text
@@ -52,3 +61,4 @@ Industrial-Part-Defect-Sorting-System
 ├─ main.py
 ├─ requirements.txt
 └─ README.md
+

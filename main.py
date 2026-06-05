@@ -11,7 +11,11 @@ from config import (
     THRESHOLD_LIST,
     MIN_CONTOUR_AREA,
     THRESHOLD_EXPERIMENT_CSV,
-    THRESHOLD_METRICS_FIGURE
+    THRESHOLD_METRICS_FIGURE,
+    MORPH_KERNEL_SIZE,
+    USE_OPEN_OPERATION,
+    USE_CLOSE_OPERATION,
+    MORPH_OUTPUT_DIR
 )
 from src.image_processor import (
     read_image,
@@ -21,6 +25,7 @@ from src.image_processor import (
     find_defect_contours,
     draw_defect_boxes
 )
+from src.morphology import apply_morphology
 from src.judge import judge_status
 from src.evaluator import evaluate_results
 from src.report import save_report, save_metrics, save_threshold_experiments
@@ -38,20 +43,27 @@ def get_true_status_from_filename(image_path):
         return "UNKNOWN"
 
 
-def detect_single_image(image_path, image_output_dir, threshold):
+def detect_single_image(image_path, image_output_dir, morph_output_dir, threshold):
     image = read_image(image_path)
 
     gray_image = convert_to_gray(image)
 
     binary_image = threshold_image(gray_image, GRAY_THRESHOLD)
 
-    defect_area = calculate_defect_area(binary_image)
+    morph_image = apply_morphology(
+        binary_image,
+        MORPH_KERNEL_SIZE,
+        use_open=USE_OPEN_OPERATION,
+        use_close=USE_CLOSE_OPERATION
+    )
+
+    defect_area = calculate_defect_area(morph_image)
 
     pred_status = judge_status(defect_area, threshold)
 
     true_status = get_true_status_from_filename(image_path)
 
-    contours = find_defect_contours(binary_image)
+    contours = find_defect_contours(morph_image)
 
     marked_image, defect_count = draw_defect_boxes(
         image,
@@ -64,9 +76,11 @@ def detect_single_image(image_path, image_output_dir, threshold):
 
     binary_output_path = image_output_dir / f"{stem_name}_binary.jpg"
     marked_output_path = image_output_dir / f"{stem_name}_marked.jpg"
+    morph_output_path = morph_output_dir / f"{stem_name}_morph.jpg"
 
     cv2.imwrite(str(binary_output_path), binary_image)
     cv2.imwrite(str(marked_output_path), marked_image)
+    cv2.imwrite(str(morph_output_path), morph_image)
 
     result = {
         "image_name": image_name,
@@ -75,17 +89,18 @@ def detect_single_image(image_path, image_output_dir, threshold):
         "true_status": true_status,
         "pred_status": pred_status,
         "marked_image_path": str(marked_output_path),
-        "binary_image_path": str(binary_output_path)
+        "binary_image_path": str(binary_output_path),
+        "morph_image_path": str(morph_output_path)
     }
 
     return result
 
 
-def run_batch_detection(image_paths, image_output_dir, threshold):
+def run_batch_detection(image_paths, image_output_dir, morph_output_dir, threshold):
     results = []
 
     for image_path in image_paths:
-        result = detect_single_image(image_path, image_output_dir, threshold)
+        result = detect_single_image(image_path, image_output_dir, morph_output_dir, threshold)
         results.append(result)
 
     return results
@@ -112,11 +127,11 @@ def print_metrics(metrics):
     print(f"Recall召回率：{metrics['recall'] * 100:.1f}%")
 
 
-def run_threshold_experiments(image_paths, image_output_dir):
+def run_threshold_experiments(image_paths, image_output_dir, morph_output_dir):
     experiment_results = []
 
     for threshold in THRESHOLD_LIST:
-        results = run_batch_detection(image_paths, image_output_dir, threshold)
+        results = run_batch_detection(image_paths, image_output_dir, morph_output_dir, threshold)
         metrics = evaluate_results(results)
 
         experiment_result = {
@@ -157,15 +172,17 @@ def main():
     sample_dir = Path(SAMPLE_IMAGE_DIR)
     image_output_dir = Path(IMAGE_OUTPUT_DIR)
     report_dir = Path(REPORT_DIR)
+    morph_output_dir = Path(MORPH_OUTPUT_DIR)
 
     image_output_dir.mkdir(parents=True, exist_ok=True)
     report_dir.mkdir(parents=True, exist_ok=True)
+    morph_output_dir.mkdir(parents=True, exist_ok=True)
 
     image_paths = sorted(sample_dir.glob("*.jpg"))
 
     print("====== 当前阈值批量检测 ======")
 
-    results = run_batch_detection(image_paths, image_output_dir, THRESHOLD)
+    results = run_batch_detection(image_paths, image_output_dir, morph_output_dir, THRESHOLD)
 
     for result in results:
         print_single_result(result)
@@ -184,7 +201,7 @@ def main():
 
     print("====== 多阈值参数实验 ======")
 
-    experiment_results = run_threshold_experiments(image_paths, image_output_dir)
+    experiment_results = run_threshold_experiments(image_paths, image_output_dir, morph_output_dir)
 
     threshold_report_path = Path(THRESHOLD_EXPERIMENT_CSV)
     save_threshold_experiments(experiment_results, threshold_report_path)
@@ -208,6 +225,7 @@ def main():
     print(f"阈值实验报表：{threshold_report_path}")
     print(f"阈值实验曲线图：{figure_path}")
     print(f"标注图保存目录：{image_output_dir}")
+    print(f"形态学结果图保存目录：{morph_output_dir}")
 
 
 if __name__ == "__main__":

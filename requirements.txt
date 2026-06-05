@@ -2,3 +2,7 @@ opencv-python
 numpy
 pandas
 matplotlib
+
+# YOLO对比框架（可选依赖）
+# 如需运行 yolo_compare.py，请安装：
+# ultralytics
